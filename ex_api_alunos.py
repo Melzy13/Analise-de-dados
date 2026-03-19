@@ -9,13 +9,12 @@ OBJETIVO:
 - Explorar dados externos
 REGRAS:
 - NÃO apagar os enunciados.
-- Organizar o código.
+- Organizar o código.""
 - Comentar cada etapa importante.
 - Mostrar os resultados com print() ou DataFrame.
 ===========================================================
 """
-import requests
-import pandas as pd
+
 # ===========================================================
 # PARTE 1 – INTRODUÇÃO
 # ===========================================================
@@ -51,18 +50,19 @@ Exercícios:
 import requests
 import pandas as pd
 
-CEP = "70686540"
-url = f"https://viacep.com.br/ws/{CEP}/json/"
+url = f"https://viacep.com.br/ws/70680250/json/"
 response = requests.get(url)
-print(response.status_code)
-
+response.status_code
+dados = response.json()
+df = pd.DataFrame([dados])
+df
 
 # ===========================================================
 # PARTE 3 – BRASILAPI
 # ===========================================================
 """
 Documentação:
-https://brasilapi.com.br/docs
+https://brasilapi.com.br/docs # Pesquisa o link, vai em "BANKS", clica em "GET" e copia a url.
 Exercícios:
 1. Consulte a lista de bancos.
 2. Transforme o resultado em DataFrame.
@@ -77,7 +77,8 @@ response = requests.get(url)
 response.status_code
 dados = response.json()
 df = pd.DataFrame(dados)
-print(df.head())
+df
+
 
 
 # ===========================================================
@@ -98,7 +99,17 @@ Desafio:
 Consultar a população total de um estado específico.
 """
 # RESOLVA AQUI:
-
+url = "https://servicodados.ibge.gov.br/api/docs/"
+response = requests.get(url)
+response.status_code
+# Transforma em json
+dados = response.json()
+# Pega o primeiro elemento da lista
+dados = dados[0]
+# Pega a chave "municipio"
+dados = dados["municipios"]
+# Transforma em df
+df = pd.json_normalize(dados)
 
 
 # ===========================================================
@@ -117,7 +128,10 @@ Exercícios:
 4. Transforme em DataFrame.
 """
 # RESOLVA AQUI:
-
+url = "https://www.ipeadata.gov.br/api/"
+response = requests.get(url)
+response.status_code
+response.json()
 
 
 # ===========================================================
@@ -144,7 +158,8 @@ Exercícios:
 """
 # RESOLVA AQUI:
 
-
+codigo = 4189
+url 
 
 # ===========================================================
 # PARTE 7 – FOOTBALL-DATA.ORG
