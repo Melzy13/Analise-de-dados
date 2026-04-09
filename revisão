@@ -1,0 +1,5 @@
+import requests
+url = "https://..."
+
+response = requests.get(url)
+responde.status_code
