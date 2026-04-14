@@ -217,8 +217,8 @@ df_clientes = pd.DataFrame(dados_clientes)
 # - r"^VIP"
 
 # RESOLUCAO: complete aqui
-filtro = df_clientes["email"].str.contains(r"\.com.br$", case=False)
-df_clientes.loc[filtro,:]
+filtro = df_clientes["email"].str.contains(r"\.com.br$", case=False) # Filtra os registros onde o email termina com ".com.br", ignorando maiúsculas/minúsculas.
+df_clientes.loc[filtro,:] # Exibe os registros filtrados com base no critério do email.
 
 # Exercicio 16:
 # Filtre os clientes cujo codigo esteja no formato:
@@ -245,10 +245,10 @@ df_clientes.loc[filtro,:]
 
 
 # Inclui valores com caixa diferente e um valor ausente.
-df_leads = pd.DataFrame(
+df_leads = pd.DataFrame( # Dicionário para criar um DataFrame de leads, contendo informações sobre a origem e a campanha de cada lead.
     {
-        "origem": ["Instagram", "instagram", "LinkedIn", "EMAIL", None, "Google Ads"],
-        "campanha": ["Promo Verao", "promo verao", "B2B_Q1", "BLACK_FRIDAY", "Teste", "Leads_2026"],
+        "origem": ["Instagram", "instagram", "LinkedIn", "EMAIL", None, "Google Ads"], # Lista de origens dos leads, incluindo variações de caixa (maiúsculas/minúsculas) e um valor ausente (None).
+        "campanha": ["Promo Verao", "promo verao", "B2B_Q1", "BLACK_FRIDAY", "Teste", "Leads_2026"], # Lista de campanhas associadas a cada lead, incluindo variações de caixa e um valor "Teste" que não segue o padrão esperado.
     }
 )
 

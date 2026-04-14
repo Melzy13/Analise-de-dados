@@ -1,7 +1,7 @@
 import requests # Ei, Python, quero usar a biblioteca Requests dentro do meu código."
 # É como um telefone que o seu programa usa para conversar com outros sites e serviços na internet.
 
-import pandas as pd
+import pandas as pd # Para organizar os dados que recebemos em uma tabela fácil de ler e manipular.
 
 base_url = "https://laboratoriodefinancas.com/api/v2" # Endereço
 token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc3MTE1MzgyLCJpYXQiOjE3NzQ1MjMzODIsImp0aSI6IjE4MWY0ZDBiNzFmYTQzNGFhZDY5MTI4MWFlNmJhOGVkIiwidXNlcl9pZCI6IjEwNCJ9.66MUmwS1I7INuYuqBHHKZGQMav_gjl-7CsHpXgLbbrk" # Chave de acesso
@@ -9,82 +9,86 @@ token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZX
 resp = requests.get( # Para pegar informações de um endereço.
     f"{base_url}/bolsa/planilhao", # O caminho exato de onde ele deve ir buscar os dados
     headers={"Authorization": f"Bearer {token}"}, # Informações adicionais (Autorização de acesso)
-    params={"data_base": "2026-03-23"},
+    params={"data_base": "2026-03-23"}, # São os "detalhes" do seu pedido. Você está dizendo: "Quero os dados desse dia específico".
 )
-dados = resp.json()
-df = pd.DataFrame(dados)
-maximo = df["roe"].max()
-filtro = df["roe"]== maximo 
-df[filtro]
+dados = resp.json() # O site responde em uma língua estranha chamada JSON. Essa linha traduz tudo para uma lista que o Python entende.
+df = pd.DataFrame(dados) # Aqui a mágica acontece! Pegamos a lista traduzida e montamos uma tabela (tipo Excel), que chamamos de DataFrame.
+maximo = df["roe"].max() # Agora, queremos encontrar o maior valor da coluna "roe". Essa linha faz exatamente isso: olha para a coluna "roe" e diz: "Qual é o maior número aqui?".
+filtro = df["roe"]== maximo # Agora que sabemos qual é o maior valor de "roe", queremos encontrar a linha inteira onde esse valor está. Essa linha cria um filtro que diz: "Me mostre apenas as linhas onde o 'roe' é igual ao máximo que encontramos".
+df[filtro] # Finalmente, aplicamos o filtro à nossa tabela. Isso nos mostra a linha completa (ou linhas, se houver mais de um) onde o "roe" é o maior. É como usar um filtro em uma planilha para mostrar apenas as linhas que atendem a uma condição específica.
 
 
 
-import requests
-import pandas as pd
+import requests # Ei, Python, quero usar a biblioteca Requests dentro do meu código.
+# É como um telefone que o seu programa usa para conversar com outros sites e serviços na internet.
+import pandas as pd # Para organizar os dados que recebemos em uma tabela fácil de ler e manipular.
 
-base_url = "https://laboratoriodefinancas.com/api/v2"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQyMjM0LCJpYXQiOjE3NzQzNTAyMzQsImp0aSI6IjQzNzQ0MzI3MjVlMTQ5ZGRhY2E0YWJmZWM5Njg3MjQxIiwidXNlcl9pZCI6Ijk2In0.KDIch7t2a4wHQNmiGlWY1uGG6_V5mK3XHmkdEH4eJpY"
-params = {"ticker": "MNPR3", "data_ini": "2025-03-21", "data_fim": "2026-03-23"}
-resp = requests.get(
-    f"{base_url}/preco/corrigido",
-    headers={"Authorization": f"Bearer {token}"},
-    params=params, 
+base_url = "https://laboratoriodefinancas.com/api/v2" # Endereço do site onde vamos buscar os dados. 
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQyMjM0LCJpYXQiOjE3NzQzNTAyMzQsImp0aSI6IjQzNzQ0MzI3MjVlMTQ5ZGRhY2E0YWJmZWM5Njg3MjQxIiwidXNlcl9pZCI6Ijk2In0.KDIch7t2a4wHQNmiGlWY1uGG6_V5mK3XHmkdEH4eJpY" # Chave de acesso, como uma senha que permite que seu programa entre no site e obtenha os dados.
+params = {"ticker": "MNPR3", "data_ini": "2025-03-21", "data_fim": "2026-03-23"} # Detalhes do pedido: estamos dizendo ao site que queremos os preços corrigidos da ação "MNPR3" entre as datas "2025-03-21" e "2026-03-23".
+resp = requests.get( # Para pegar informações de um endereço.
+    f"{base_url}/preco/corrigido", # O caminho exato de onde ele deve ir buscar os dados.
+    headers={"Authorization": f"Bearer {token}"}, # Informações adicionais (Autorização de acesso).
+    params=params, # São os "detalhes" do seu pedido. Você está dizendo: "Quero os dados desse produto específico e nesse intervalo de tempo". Pense nisso como dizer ao vendedor exatamente o que você quer comprar e quando você quer usar o produto.
 )
 
-dados = resp.json()
-df_preco = pd.DataFrame(dados)
-filtro1 = df_preco["data"]=="2026-03-23"
-preco_final = df_preco.loc[filtro1, 'fechamento'].iloc[0]
-preco_final = float (preco_final)
-filtro2 = df_preco["data"]== "2025-03-21"
-precos_inicial = df_preco.loc[filtro2, 'fechamento'].iloc[0]
-precos_inicial = float(precos_inicial)
-preco_final/precos_inicial - 1 
+dados = resp.json() # O site responde em uma língua estranha chamada JSON. Essa linha traduz tudo para uma lista que o Python entende. Pense nisso como pegar um manual de instruções em uma língua estrangeira e traduzi-lo para o seu idioma para que você possa entender como usar o produto que comprou.
+df_preco = pd.DataFrame(dados) # Aqui a mágica acontece! Pegamos a lista traduzida e montamos uma tabela (tipo Excel), que chamamos de DataFrame. Isso é como organizar todas as informações do manual de instruções em uma tabela fácil de ler, onde cada linha representa um dia e cada coluna representa um tipo diferente de informação sobre o preço da ação (como o preço de abertura, fechamento, etc.).
+filtro1 = df_preco["data"]=="2026-03-23" # Agora queremos encontrar o preço da ação no dia "2026-03-23". Essa linha cria um filtro que diz: "Me mostre apenas as linhas onde a data é igual a '2026-03-23'". Pense nisso como usar um filtro em uma planilha para mostrar apenas as linhas que correspondem a uma data específica.
+preco_final = df_preco.loc[filtro1, 'fechamento'].iloc[0] # Agora que temos o filtro, queremos pegar o preço de fechamento da ação nesse dia específico. Essa linha diz: "Me mostre o valor na coluna 'fechamento' para a linha onde a data é '2026-03-23'". O .iloc[0] é usado para pegar o primeiro valor encontrado, caso haja mais de um. Pense nisso como olhar para a tabela filtrada e pegar o número que representa o preço de fechamento da ação naquele dia.
+preco_final = float (preco_final) # Agora que temos o preço final, queremos transformá-lo em um número decimal (float) para que possamos fazer cálculos com ele. Pense nisso como pegar um número que está escrito como texto e convertê-lo para um formato que você pode usar para fazer contas, como calcular o retorno da ação.
+filtro2 = df_preco["data"]== "2025-03-21" # Agora queremos encontrar o preço da ação no dia "2025-03-21". Essa linha cria um filtro que diz: "Me mostre apenas as linhas onde a data é igual a '2025-03-21'". Pense nisso como usar um filtro em uma planilha para mostrar apenas as linhas que correspondem a uma data específica.
+precos_inicial = df_preco.loc[filtro2, 'fechamento'].iloc[0] # Agora que temos o filtro, queremos pegar o preço de fechamento da ação nesse dia específico. Essa linha diz: "Me mostre o valor na coluna 'fechamento' para a linha onde a data é '2025-03-21'". O .iloc[0] é usado para pegar o primeiro valor encontrado, caso haja mais de um. Pense nisso como olhar para a tabela filtrada e pegar o número que representa o preço de fechamento da ação naquele dia.
+precos_inicial = float(precos_inicial) # Agora que temos o preço inicial, queremos transformá-lo em um número decimal (float) para que possamos fazer cálculos com ele. Pense nisso como pegar um número que está escrito como texto e convertê-lo para um formato que você pode usar para fazer contas, como calcular o retorno da ação.
+preco_final/precos_inicial - 1 # Agora que temos o preço final e o preço inicial, queremos calcular o retorno da ação durante esse período. Essa linha faz isso dividindo o preço final pelo preço inicial e subtraindo 1. O resultado será um número decimal que representa o retorno percentual da ação durante esse período. Pense nisso como calcular quanto dinheiro você ganhou ou perdeu com a ação entre as duas datas, expressando isso como uma porcentagem do seu investimento inicial.
 
 
-#API para pegar o Ibov
-import yfinance as yf
-#Get ticker data
-ibov = yf.download("^BVSP", start="2001-01-01", end= "2026-03-26")
-filtro1 = ibov.index == "2025-03-21"
-ibov_ini = ibov[filtro1]["Close"].iloc[0]
-filtro2 = ibov.index == "2026-03-23"
-ibov_fim = ibov [filtro2]["Close"].iloc[0]
-ibov_fim/ibov_ini - 1
+#API para pegar o Ibov # O processo é o mesmo, mas em vez de pedir os preços de uma ação específica, estamos pedindo os preços do índice Ibovespa (representado por "^BVSP") durante o mesmo período. Depois, calculamos o retorno do índice da mesma forma que fizemos para a ação, dividindo o preço final pelo preço inicial e subtraindo 1 para obter o retorno percentual do índice durante esse período. Isso nos permite comparar o desempenho da ação com o desempenho geral do mercado representado pelo Ibovespa.
+import yfinance as yf # Biblioteca que facilita a obtenção de dados financeiros, como preços de ações e índices, diretamente do Yahoo Finance. Pense nisso como um serviço de entrega rápida que traz os dados financeiros que você precisa diretamente para o seu programa, sem que você precise se preocupar com os detalhes técnicos de como obter esses dados.
+#Get ticker data # Para obter os dados de um ticker específico (neste caso, o índice Ibovespa, representado por "^BVSP") durante um período de tempo específico (de "2001-01-01" a "2026-03-26"). O yf.download é uma função da biblioteca yfinance que faz exatamente isso: ela baixa os dados históricos do ticker que você especificar para o período que você escolher. Pense nisso como usar um serviço de entrega rápida para obter os dados financeiros que você precisa diretamente do Yahoo Finance, sem ter que se preocupar com os detalhes técnicos de como obter esses dados.
+ibov = yf.download("^BVSP", start="2001-01-01", end= "2026-03-26") # Agora que temos os dados do índice Ibovespa em um DataFrame, queremos calcular o retorno do índice durante o mesmo período que calculamos para a ação. Para fazer isso, primeiro criamos um filtro para encontrar o preço de fechamento do índice no dia "2025-03-21" (ibov_ini) e outro filtro para encontrar o preço de fechamento do índice no dia "2026-03-23" (ibov_fim). Depois, calculamos o retorno do índice dividindo o preço final pelo preço inicial e subtraindo 1, da mesma forma que fizemos para a ação. Isso nos dá o retorno percentual do índice durante esse período, permitindo-nos comparar o desempenho da ação com o desempenho geral do mercado representado pelo Ibovespa.
+filtro1 = ibov.index == "2025-03-21" # Agora queremos encontrar o preço do índice Ibovespa no dia "2025-03-21". Essa linha cria um filtro que diz: "Me mostre apenas as linhas onde a data é igual a '2025-03-21'". Pense nisso como usar um filtro em uma planilha para mostrar apenas as linhas que correspondem a uma data específica.
+ibov_ini = ibov[filtro1]["Close"].iloc[0] # Agora que temos o filtro, queremos pegar o preço de fechamento do índice nesse dia específico. Essa linha diz: "Me mostre o valor na coluna 'Close' para a linha onde a data é '2025-03-21'". O .iloc[0] é usado para pegar o primeiro valor encontrado, caso haja mais de um. Pense nisso como olhar para a tabela filtrada e pegar o número que representa o preço de fechamento do índice naquele dia.
+filtro2 = ibov.index == "2026-03-23" #  Agora queremos encontrar o preço do índice Ibovespa no dia "2026-03-23". Essa linha cria um filtro que diz: "Me mostre apenas as linhas onde a data é igual a '2026-03-23'". Pense nisso como usar um filtro em uma planilha para mostrar apenas as linhas que correspondem a uma data específica.
+ibov_fim = ibov [filtro2]["Close"].iloc[0] # Agora que temos o filtro, queremos pegar o preço de fechamento do índice nesse dia específico. Essa linha diz: "Me mostre o valor na coluna 'Close' para a linha onde a data é '2026-03-23'". O .iloc[0] é usado para pegar o primeiro valor encontrado, caso haja mais de um. Pense nisso como olhar para a tabela filtrada e pegar o número que representa o preço de fechamento do índice naquele dia.
+ibov_fim/ibov_ini - 1 # Agora que temos o preço final e o preço inicial do índice Ibovespa, queremos calcular o retorno do índice durante esse período. Essa linha faz isso dividindo o preço final pelo preço inicial e subtraindo 1. O resultado será um número decimal que representa o retorno percentual do índice durante esse período. Pense nisso como calcular quanto dinheiro você teria ganho ou perdido se tivesse investido no índice Ibovespa entre as duas datas, expressando isso como uma porcentagem do seu investimento inicial. Isso nos permite comparar o desempenho da ação com o desempenho geral do mercado representado pelo Ibovespa.
 
 
 
 
 
-import requests
-import pandas as pd
-base_url = "https://laboratoriodefinancas.com/api/v2"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQyMjM0LCJpYXQiOjE3NzQzNTAyMzQsImp0aSI6IjQzNzQ0MzI3MjVlMTQ5ZGRhY2E0YWJmZWM5Njg3MjQxIiwidXNlcl9pZCI6Ijk2In0.KDIch7t2a4wHQNmiGlWY1uGG6_V5mK3XHmkdEH4eJpY"
-resp = requests.get(
-    f"{base_url}/bolsa/planilhao",
-    headers={"Authorization": f"Bearer {token}"},
-    params={"data_base": "2021-04-01"},
-)
-dados = resp.json()
-df = pd.DataFrame(dados)
-df2 = df[["ticker", "roic", "earning_yield"]]
-df2['rank_roic'] = df2 ['roic'].rank(ascending=False)
-df2['rank_p_ey'] = df2['earning_yield'].rank(ascending=False)
-df2["rank_final"] = (df2['rank_roic'] + df2['rank_p_ey']) / 2
-df2.sort_values("rank_final", ascending=False)['ticker'][:20]  
 
-#API para pegar os precos das acoes
-base_url = "https://laboratoriodefinancas.com/api/v2"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQyMjM0LCJpYXQiOjE3NzQzNTAyMzQsImp0aSI6IjQzNzQ0MzI3MjVlMTQ5ZGRhY2E0YWJmZWM5Njg3MjQxIiwidXNlcl9pZCI6Ijk2In0.KDIch7t2a4wHQNmiGlWY1uGG6_V5mK3XHmkdEH4eJpY"
-params = {"ticker" : "BBSE3", "data_ini" : "2001-01-01", "data_fim": "2026-03-26"}
-resp = requests.get(
-    f"{base_url}/preco/corrigido",
-    headers={"Authorization": f"Bearer {token}"},
-    params = params,
-)
-dados = resp.json()
-df_preco = pd.DataFrame(dados)
-#Preco final
-filtro1 = df_preco["data"] == "2026-03-23"
-preco_final = df_preco.loc[filtro1, 'fechamento'].iloc[0]
-preco_final = float(preco_final)
+import requests # Ei, Python, quero usar a biblioteca Requests dentro do meu código."
+# É como um telefone que o seu programa usa para conversar com outros sites e serviços na internet
+import pandas as pd # Para organizar os dados que recebemos em uma tabela fácil de ler e manipular.
+base_url = "https://laboratoriodefinancas.com/api/v2" # Endereço do site onde vamos buscar os dados. Pense nisso como o endereço de uma loja onde você quer comprar algo.
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQyMjM0LCJpYXQiOjE3NzQzNTAyMzQsImp0aSI6IjQzNzQ0MzI3MjVlMTQ5ZGRhY2E0YWJmZWM5Njg3MjQxIiwidXNlcl9pZCI6Ijk2In0.KDIch7t2a4wHQNmiGlWY1uGG6_V5mK3XHmkdEH4eJpY" # Chave de acesso, como uma senha que permite que seu programa fale com o site e obtenha os dados.
+resp = requests.get( # Para pegar informações de um endereço.
+    f"{base_url}/bolsa/planilhao", # O caminho exato de onde ele deve ir buscar os dados. Pense nisso como o corredor específico dentro da loja onde o produto que você quer está localizado.
+    headers={"Authorization": f"Bearer {token}"}, # Informações adicionais (Autorização de acesso). Isso é como mostrar sua carteira de identidade para provar que você tem permissão para entrar na loja e comprar o produto.
+    params={"data_base": "2021-04-01"}, # São os "detalhes" do seu pedido. Você está dizendo: "Quero os dados desse dia específico". Pense nisso como dizer ao vendedor exatamente o que você quer comprar e quando você quer usar o produto.
+) # O site responde em uma língua estranha chamada JSON. Essa linha traduz tudo para uma lista que o Python entende. Pense nisso como pegar um manual de instruções em uma língua estrangeira e traduzi-lo para o seu idioma para que você possa entender como usar o produto que comprou.
+dados = resp.json() # O site responde em uma língua estranha chamada JSON. Essa linha traduz tudo para uma lista que o Python entende. Pense nisso como pegar um manual de instruções em uma língua estrangeira e traduzi-lo para o seu idioma para que você possa entender como usar o produto que comprou.
+df = pd.DataFrame(dados) # Aqui a mágica acontece! Pegamos a lista traduzida e montamos uma tabela (tipo Excel), que chamamos de DataFrame. Isso é como organizar todas as informações do manual de instruções em uma tabela fácil de ler, onde cada linha representa um produto e cada coluna representa um tipo diferente de informação sobre o produto (como o nome, o preço, etc.).
+df2 = df[["ticker", "roic", "earning_yield"]] # Agora que temos a tabela completa, queremos criar uma nova tabela (df2) que contenha apenas as colunas "ticker", "roic" e "earning_yield". Essa linha faz exatamente isso: ela seleciona apenas essas três colunas da tabela original e cria uma nova tabela com elas. Pense nisso como pegar uma planilha cheia de informações e criar uma nova planilha que contém apenas as colunas que você considera mais importantes para a sua análise.
+df2['rank_roic'] = df2 ['roic'].rank(ascending=False) # Agora queremos classificar as empresas com base no valor do "roic". Essa linha cria uma nova coluna chamada "rank_roic" que atribui um número de classificação a cada empresa com base no valor do "roic". O parâmetro ascending=False significa que a empresa com o maior "roic" receberá a classificação 1, a segunda maior receberá a classificação 2, e assim por diante. Pense nisso como criar um ranking das empresas com base no valor do "roic", onde a melhor empresa (com o maior "roic") fica no topo da lista.
+df2['rank_p_ey'] = df2['earning_yield'].rank(ascending=False) # Agora queremos classificar as empresas com base no valor do "earning_yield". Essa linha cria uma nova coluna chamada "rank_p_ey" que atribui um número de classificação a cada empresa com base no valor do "earning_yield". O parâmetro ascending=False significa que a empresa com o maior "earning_yield" receberá a classificação 1, a segunda maior receberá a classificação 2, e assim por diante. Pense nisso como criar um ranking das empresas com base no valor do "earning_yield", onde a melhor empresa (com o maior "earning_yield") fica no topo da lista.
+df2["rank_final"] = (df2['rank_roic'] + df2['rank_p_ey']) / 2 # Agora queremos criar um ranking final que combine as classificações de "roic" e "earning_yield". Essa linha faz isso calculando a média das duas classificações para cada empresa e armazenando o resultado em uma nova coluna chamada "rank_final". Pense nisso como criar um ranking geral das empresas que leva em consideração tanto o "roic" quanto o "earning_yield", dando a mesma importância para ambos os critérios.
+df2.sort_values("rank_final", ascending=False)['ticker'][:20] # Finalmente, queremos ver quais são as 20 melhores empresas com base no ranking final que criamos. Essa linha classifica a tabela df2 com base na coluna "rank_final" em ordem decrescente (ascending=False), o que significa que a empresa com o
+
+#API para pegar os precos das acoes # O processo é o mesmo, mas em vez de pedir os dados do planilhão, estamos pedindo os preços corrigidos de uma ação específica (representada por "BBSE3") entre as datas "2001-01-01" e "2026-03-26". Depois, calculamos o preço final da ação no dia "2026-03-23" e o preço inicial da ação no dia "2025-03-21", e finalmente calculamos o retorno da ação durante esse período dividindo o preço final pelo preço inicial e subtraindo 1 para obter o retorno percentual da ação durante esse período. Isso nos permite avaliar o desempenho da ação durante esse período específico.
+base_url = "https://laboratoriodefinancas.com/api/v2"# Endereço do site onde vamos buscar os dados. Pense nisso como o endereço de uma loja onde você quer comprar algo.
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQyMjM0LCJpYXQiOjE3NzQzNTAyMzQsImp0aSI6IjQzNzQ0MzI3MjVlMTQ5ZGRhY2E0YWJmZWM5Njg3MjQxIiwidXNlcl9pZCI6Ijk2In0.KDIch7t2a4wHQNmiGlWY1uGG6_V5mK3XHmkdEH4eJpY" # Chave de acesso, como uma senha que permite que seu programa fale com o site e obtenha os dados.
+params = {"ticker" : "BBSE3", "data_ini" : "2001-01-01", "data_fim": "2026-03-26"} # Detalhes do pedido: estamos dizendo ao site que queremos os preços corrigidos da ação "BBSE3" entre as datas "2001-01-01" e "2026-03-26". Pense nisso como dizer ao vendedor exatamente o que você quer comprar e quando você quer usar o produto.
+resp = requests.get( # Para pegar informações de um endereço.
+    f"{base_url}/preco/corrigido", # O caminho exato de onde ele deve ir buscar os dados. Pense nisso como o corredor específico dentro da loja onde o produto que você quer está localizado.
+    headers={"Authorization": f"Bearer {token}"}, # Informações adicionais (Autorização de acesso). Isso é como mostrar sua carteira de identidade para provar que você tem permissão para entrar na loja e comprar o produto.
+    params = params, # São os "detalhes" do seu pedido. Você está dizendo: "Quero os dados desse produto específico e nesse intervalo de tempo". Pense nisso como dizer ao vendedor exatamente o que você quer comprar e quando você quer usar o produto.
+)# O site responde em uma língua estranha chamada JSON. Essa linha traduz tudo para uma lista que o Python entende. Pense nisso como pegar um manual de instruções em uma língua estrangeira e traduzi-lo para o seu idioma para que você possa entender como usar o produto que comprou.
+dados = resp.json() # O site responde em uma língua estranha chamada JSON. Essa linha traduz tudo para uma lista que o Python entende. Pense nisso como pegar um manual de instruções em uma língua estrangeira e traduzi-lo para o seu idioma para que você possa entender como usar o produto que comprou.
+df_preco = pd.DataFrame(dados) # Aqui a mágica acontece! Pegamos a lista traduzida e montamos uma tabela (tipo Excel), que chamamos de DataFrame. Isso é como organizar todas as informações do manual de instruções em uma tabela fácil de ler, onde cada linha representa um dia e cada coluna representa um tipo diferente de informação sobre o preço da ação (como o preço de abertura, fechamento, etc.).
+#Preco final # Agora queremos encontrar o preço da ação no dia "2026-03-23". Essa linha cria um filtro que diz: "Me mostre apenas as linhas onde a data é igual a '2026-03-23'". Pense nisso como usar um filtro em uma planilha para mostrar apenas as linhas que correspondem a uma data específica.
+filtro1 = df_preco["data"] == "2026-03-23" # Agora que temos o filtro, queremos pegar o preço de fechamento da ação nesse dia específico. Essa linha diz: "Me mostre o valor na coluna 'fechamento' para a linha onde a data é '2026-03-23'". O .iloc[0] é usado para pegar o primeiro valor encontrado, caso haja mais de um. Pense nisso como olhar para a tabela filtrada e pegar o número que representa o preço de fechamento da ação naquele dia.
+preco_final = df_preco.loc[filtro1, 'fechamento'].iloc[0] # Agora que temos o preço final, queremos transformá-lo em um número decimal (float) para que possamos fazer cálculos com ele. Pense nisso como pegar um número que está escrito como texto e convertê-lo para um formato que você pode usar para fazer contas, como calcular o retorno da ação.
+preco_final = float(preco_final) # Agora que temos o preço final, queremos transformá-lo em um número decimal (float) para que possamos fazer cálculos com ele. Pense nisso como pegar um número que está escrito como texto e convertê-lo para um formato que você pode usar para fazer contas, como calcular o retorno da ação.
+#Preco inicial # Agora queremos encontrar o preço da ação no dia "2025-03-
